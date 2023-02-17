@@ -1,0 +1,19 @@
+package kr.or.ddit.radiology.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.commons.vo.WaitHistoryVO;
+
+@Mapper
+public interface RadiologyWaitingListDAO {
+
+	/**
+	 * xray대기리스트 출력
+	 * @param map
+	 * @returnsize 
+	 */
+	public List<WaitHistoryVO> retrieveXrayList(Map<String, String> map);
+}

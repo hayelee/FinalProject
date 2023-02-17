@@ -1,0 +1,184 @@
+@charset "UTF-8";
+
+html, body {
+	height: 100%;
+	overflow: hidden;
+}
+
+thead {
+	height: 70px;
+}
+
+tbody {
+	height: 70px;
+}
+
+th, td {
+	background-color: white;
+	border-radius: 5px;
+	text-align: center;
+}
+
+h4 {
+	font-size: 30px;
+}
+
+.wrapper {
+	height: 985px;
+}
+
+.left {
+	float: left;
+	width: 665px;
+	height: 982px;
+}
+
+.right {
+	float: right;
+	width: 1245px;
+	height: 982px;
+}
+
+.wait-list {
+	width: 663px;
+	height: 550px;
+}
+
+.cex-history {
+	width: 663px;
+	height: 430px;
+}
+
+.patient-info {
+	width: 1245px;
+	height: 326px;
+}
+
+.cex-detail {
+	width: 1245px;
+	height: 326px;
+}
+
+.cex-barcode {
+	width: 1245px;
+	height: 326px;
+}
+
+.wait-list-in {
+	width: 600px;
+    height: 488px;
+    margin: 10px;
+    padding: 20px;
+    background-color: #F2F1F1;
+    border-radius: 5px;
+	border-top: 5px solid #4F80FF;
+    box-shadow: 1px 1px 5px grey;
+}
+
+.patient-info-in {
+	width: 1183px;
+    height: 263px;
+	margin: 10px;
+	background-color: #F2F1F1;
+	padding: 20px;
+	border-radius: 5px;
+	border-top: 5px solid #4F80FF;
+	box-shadow: 1px 1px 5px grey;
+}
+
+.cex-history-in {
+	width: 600px;
+    height: 366px;
+    margin: 10px;
+    padding: 20px;
+    background-color: #F2F1F1;
+    border-radius: 5px;
+	border-top: 5px solid #4F80FF;
+    box-shadow: 1px 1px 5px grey;
+}
+
+.cex-detail-in{
+	width: 1183px;
+    height: 263px;
+	margin: 10px; 
+	padding : 20px;
+	background-color: #F2F1F1;
+	border-radius: 5px;
+	border-top: 5px solid #4F80FF;
+	box-shadow: 1px 1px 5px grey;
+}
+
+.cex-barcode-in{
+	width: 1183px;
+    height: 263px;
+	margin: 10px; 
+	padding : 20px;
+	background-color: #F2F1F1;
+	border-radius: 5px;
+	border-top: 5px solid #4F80FF;
+    box-shadow: 1px 1px 5px grey;
+	display: flex;
+    flex-direction: column;
+}
+
+.patient-info-in-top {
+	width: 1183px;
+	height: 45px;
+}
+.patient-detail-in-top {
+	width: 1183px;
+	height: 45px;
+}
+
+#cex-title {
+	float: left;
+}
+
+#cex-search-form {
+	float: right;
+}
+
+.cex-select {
+	width: 200px;
+	height: 40px;
+}
+
+.cex-input {
+	width: 300px;
+	height: 36px;
+}
+
+.btn-submit {
+	width: 100px;
+	height: 40px;
+	background-color : #16308D;
+	color: white;
+	border: none;
+	margin: 3px;
+    box-shadow: 1px 1px 2px grey;
+}
+
+.cex-table {
+	width: 1183px;
+	height: 200px;
+	padding-top: 40px;
+}
+
+.cex-wait-table {
+	width: 600px;
+	height: 430px;
+	padding-top: 40px;
+}
+
+.cex-history-table{
+	width: 600px;
+    height: 310px;
+    padding-top: 30px;
+}
+
+#barcode-print{
+	width: 1181px;
+    height: 285px;
+    background-color: white;
+    margin-top: 20px;
+}

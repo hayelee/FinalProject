@@ -1,0 +1,25 @@
+package kr.or.ddit.doctor.controller;
+
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/doctor")
+public class DoctorMainController {
+	
+	@GetMapping("/main")
+	public String enterMainView() {
+		
+		
+		return "doctor/doctorMain";
+	}
+	
+//	@GetMapping(produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
+//	public String getRadiList() {
+//		
+//		
+//		return "jsonView";
+//	}
+}

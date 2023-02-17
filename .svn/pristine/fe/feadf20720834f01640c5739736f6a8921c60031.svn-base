@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.nurse.dao.CexDAO">
+
+	<select id="selectPatientList" resultType="PatientVO" parameterType="hashMap">
+		
+		SELECT PA_NO, PA_NAME, PA_REG
+		    , PA_HP, PA_PRN , PA_ZIP
+		    , PA_ADD1, PA_ADD2, PA_PIYN
+		    , PA_SEX              
+		  FROM PATIENT   
+		<where>
+			<if test="searchOption!=null">
+				<choose>
+					<when test="searchOption=='no'">
+						AND PA_NO = #{searchWord}
+					</when>
+					<when test="searchOption=='name'">
+						AND PA_NAME LIKE '%' || #{searchWord} || '%'
+					</when>
+				</choose>
+			</if>
+		</where>      
+	</select>
+	
+	<select id="selectCexHistory" resultType="kr.or.ddit.nurse.vo.CexVO" parameterType="int">
+		SELECT
+		    A.RCP_NO, A.PA_NO, TO_CHAR(A.RCP_DATE,'YYYY-MM-DD') as RCP_DATE, A.OFFICE_CD,
+		    B.TRM_CD, B.MEDI_RECORD, TO_CHAR(B.TRM_DT, 'YYYY-MM-DD') as TRM_DT, B.EMP_NO,
+		    C.CEX_NO, C.CEX_CBC,C.CEX_ECG,C.CEX_UA,
+		    C.CEX_PFTS, TO_CHAR(C.CEX_DATE, 'YYYY-MM-DD') as CEX_DATE, C.CEX_NE,
+		    C.EMP_NO, C.CEX_STATUS, C.TRM_CD
+		FROM RECEPTION A
+		LEFT OUTER JOIN TRM_CHART B
+		    ON A.RCP_NO = B.RCP_NO
+		INNER JOIN CLINICAL_EXAMINATION C
+		    ON B.TRM_CD = C.TRM_CD
+		WHERE A.PA_NO = #{noname}
+	</select>
+	
+	<select id="selectCexDetail" resultType="kr.or.ddit.nurse.vo.CexVO" parameterType="int">
+		SELECT
+		     A.cex_no, A.cex_cbc, A.cex_ecg
+		    , A.cex_ua, A.cex_pfts, TO_CHAR(A.cex_date, 'YYYY-MM-DD') AS cex_date
+		    , A.cex_ne, A.emp_no, A.cex_status, A.trm_cd
+		    , B.medi_record, B.trm_dt, B.rcp_no
+		    , C.PA_NO
+		    , D.PA_NAME
+		FROM clinical_examination A
+		INNER JOIN TRM_CHART B
+			ON A.trm_cd = B.TRM_CD
+		INNER JOIN RECEPTION C
+			ON B.RCP_NO = C.RCP_NO
+		INNER JOIN PATIENT D
+			ON C.PA_NO = D.PA_NO
+		WHERE CEX_NO = #{noname}
+	</select>
+	
+	<select id="selectCexWaitList" resultType="kr.or.ddit.nurse.vo.CexVO">
+		SELECT 
+		    A.ICD_NAME, A.TRM_CD
+		    , C.PA_NO, C.PA_NAME
+		FROM V_CEX A
+		INNER JOIN RECEPTION B
+		ON A.RCP_NO = B. RCP_NO
+		INNER JOIN PATIENT C
+		ON B.PA_NO = C.PA_NO
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

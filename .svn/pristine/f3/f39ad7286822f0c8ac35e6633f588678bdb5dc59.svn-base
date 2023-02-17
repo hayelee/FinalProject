@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.doctor.dao.DoctorDAO">
+
+	<select id="selectDisList" resultType="kr.or.ddit.commons.vo.DiseaseVO">
+		SELECT  DISEASE_CD, EN_NM, KOR_NM
+		FROM    CLASSIFICATION_DISEASE
+	</select>
+	
+	<select id="selectSymList" resultType="SymptomVO">
+		SELECT  SYM_CD, SYM_DETAIL
+		FROM    SYMPTOM
+	</select>
+	
+	<select id="selectRadiList" resultType="FilmCateVO">
+		SELECT  FILM_CD, FILM_NM, EMP_NO
+		FROM    FILMCATE
+	</select>
+	
+	<select id="selectGOList" resultType="GroupOrderVO">
+		SELECT  GO_CD, GO_KO
+		FROM    GROUP_ORDER
+	</select>
+
+	<select id="selectTrmChart" parameterType="int" resultType="TrmChartVO">
+		
+	</select>
+	
+	<select id="selectTrmChartList" parameterType="int" resultType="TrmChartVO">
+		
+	</select>
+	
+	<select id="selectWaitHistory" parameterType="int" resultType="WaitHistoryVO">
+	
+	</select>
+	
+	<select id="selectPaInfo" parameterType="int" resultType="PatientVO">
+		SELECT  PA_NO
+		        ,PA_NAME
+		        ,PA_REG
+		        ,PA_HP
+		        ,PA_PRN
+		        ,PA_ZIP
+		        ,PA_ADD1
+		        ,PA_ADD2
+		        ,PA_PIYN
+		        ,PA_DELETE
+		        ,PA_SEX
+		FROM    PATIENT
+		WHERE   PA_NO = #{paNo}
+	</select>
+	
+	<insert id="insertTrmChart" parameterType="TrmChartVO">
+		INSERT INTO trm_chart (
+		    trm_cd,
+		    medi_record,
+		    trm_dt,
+		    emp_no,
+		    rcp_no
+		) VALUES (
+		    seq,
+		    :v1,
+		    :v2,
+		    :v3,
+		    :v4
+		)
+	</insert>
+</mapper>

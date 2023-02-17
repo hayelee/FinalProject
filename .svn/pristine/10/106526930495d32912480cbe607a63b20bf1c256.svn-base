@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.pt.dao.PtAssinmentDAO">
+	<!-- 대기환자 조회 -->
+	<select id="selectPtAssinmentList" resultType="kr.or.ddit.commons.vo.PtAssinmentVO">
+		SELECT 
+		    waitst_cd,
+		    waitst_nm,
+		    wait_no,
+		    rcp_no,
+		    wait_dt,
+		    wait_num,
+		    div_cd,
+		    div_nm,
+		    RCP_DATE,
+		    OFFICE_CD,
+		    P.PA_NO,
+		    P.PA_NAME,
+		    P.PA_REG,
+		    P.PA_SEX
+		FROM PATIENT P LEFT OUTER JOIN V_B ON P.PA_NO = V_B.PA_NO
+		WHERE WAITST_CD = 'WS001' AND DIV_CD = 'DV008'
+	</select>
+	
+	<!-- bed 상황 -->
+	<select id="ptBedList" resultType="kr.or.ddit.commons.vo.PtAssinmentVO">
+		WITH REP_PAT AS
+			(SELECT B.RCP_NO, C.PA_NAME
+			FROM  RECEPTION B, PATIENT C
+			WHERE B.PA_NO = c.pa_no)
+		SELECT PT_BED_CD, A.RCP_NO, D.RCP_NO, D.PA_NAME
+		FROM PHYSIOTHERAPY A, REP_PAT D
+		WHERE A.RCP_NO = D.RCP_NO(+)
+		ORDER BY PT_BED_CD
+	</select>
+	
+	<!-- 베드 배정 -->	
+	<update id="ptBedFull" parameterType="kr.or.ddit.commons.vo.PtAssinmentVO">
+		UPDATE PHYSIOTHERAPY 
+		SET PT_BED_STATE = #{ptBedState,jdbcType=VARCHAR},
+    		RCP_NO = #{rcpNo,jdbcType=NUMERIC}
+		WHERE PT_BED_CD=#{ptBedCd,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 환자검색 -->
+	<select id="selectPatientList" resultType="kr.or.ddit.commons.vo.PatientVO" parameterType="hashMap">
+		SELECT PA_NO, PA_NAME, PA_REG
+		    , PA_HP, PA_PRN , PA_ZIP
+		    , PA_ADD1, PA_ADD2, PA_PIYN
+		    , PA_SEX              
+		  FROM PATIENT   
+		<where>
+			<if test="searchOption!=null">
+				<choose>
+					<when test="searchOption=='no'">
+						AND PA_NO = #{searchWord}
+					</when>
+					<when test="searchOption=='name'">
+						AND PA_NAME LIKE '%' || #{searchWord} || '%'
+					</when>
+				</choose>
+			</if>
+		</where>      
+	</select>
+	
+</mapper>

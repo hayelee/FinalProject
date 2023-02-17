@@ -1,0 +1,459 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<style>
+*, ::after, ::before{
+	box-sizing: content-box;
+}
+
+/* *{	border: 1px solid black;} */
+
+html, body {
+	height: 100%;
+	overflow: hidden;
+}
+
+td{
+	valign : middle;
+}
+
+.ward-div{
+	float:left;
+	margin: 10px;
+}
+.ward-wrapper{
+	height: 53.25rem;
+}
+
+.patient-info{
+	width: 20rem;
+	height: 50.5rem;
+	display: flex;
+}
+.patient-manage {
+	float:left;
+	width: 50.5rem;
+	height: 50.5rem;
+	overflow: auto;
+}
+.ward-order-container {
+	width: 41rem;
+    height: 52rem;
+}
+.ward-order-item1{
+	width: 41rem;
+	height: 25rem;
+	margin-top: 0;
+	margin-left: 0;
+}
+.ward-order-item2{
+	width: 41rem;
+	height: 23rem;
+	margin-top: 5px;
+	margin-left: 0;
+}
+
+.ward_input{
+	width: 19.5rem;
+	height: 2rem;
+	flex-direction: column; 
+}
+
+.ward_title{
+	flex-direction: column; 
+}
+
+#prMemo{
+	height: 15rem;
+}
+
+.tap_input{
+	position: absolute;
+    z-index: -1;
+    width: 41rem;
+    height: 23rem;
+}
+
+#nursingRecord_textarea{
+	width: 35.5rem;
+	height: 12rem;
+}
+
+#nursingRecord-register{
+	float: right;
+}
+
+#patient-manage-in{
+	width: 49.5rem;
+	height: 50rem;
+	background-color: white;
+	margin: 0.5rem;
+}
+
+/*tab css*/
+	.tab{ margin:10px; overflow:hidden;}
+	.tabnav{font-size:0;}
+	.tabnav li{display: inline-block; text-align:center; border-right:1px solid #ddd;}
+	.tabnav li a:before{content:""; position:absolute; left:0; top:0px; width:100%; height:3px; }
+	.tabnav li a.active:before{background:#4E73DF;}
+	.tabnav li a.active{border-bottom:1px solid #fff;}
+	.tabnav li a{ position:relative; display:block; background: #f8f8f8; color: #000; padding:0 15px; line-height:46px; text-decoration:none; font-size:16px;}
+	.tabnav li a:hover, .tabnav li a.active{background:#fff; color:#4E73DF; }
+	.tabcontent{ width:800px; border-top:none; background:#fff;}
+	.tabcontentWrap{padding: 0px;  height:265px; overflow-y:auto; overflow-x:auto;  border-top:none; background:#fff;}
+
+</style>
+
+<script>
+
+/* 현재 입원중인 환자목록을 띄워줌 */
+let wardPatientList = function(){
+	$.ajax({
+		url : "wardPatientList",
+		method : "get",
+		contentType: "application/json;charset=utf-8",
+		dataType : "json",
+		success : function(result) {
+			let trTags = [];
+            $.each(result, function(i, v){
+               let aTag = $("<a>").html(v.hsptNo).attr({
+            	   "href":'#',
+            	   "class": "a_btn",
+            	   "onclick": "wardPatientDetail("+v.hsptNo+")"
+               });
+               console.log(v);
+               let trTag = $("<tr>")
+                           .append(
+                              $("<td>").html(aTag)      
+                              , $("<td>").html(v.wrRno)      
+                              , $("<td>").html(v.bedNo)      
+                              , $("<td>").html(v.paName)      
+                              , $("<td>").html(v.icdName)      
+                           ).data("patient",v);
+               trTags.push(trTag)
+            });
+            $("#wardPatientListBody").html(trTags);
+		},
+		error : function(jqXHR, status, error) {
+			console.log(jqXHR);
+			console.log(status);
+			console.log(error);
+		}
+	});
+}
+wardPatientList();
+
+/* 현재 입원중인 환자의 상세정보 출력  */
+function wardPatientDetail(hsptNo){
+	// 해당 환자에게 기록된 간호기록 리스트 띄우기
+	nrec_list(hsptNo);
+	
+	let data = {
+			hsptNo : hsptNo
+	}
+	let today = new Date();
+	let inDate = '';
+	let input_paNo = $('.input_paNo');
+	let input_paName = $('.input_paName');
+	let input_hsptNo = $('.input_hsptNo');
+	
+	$.ajax({
+		url : "wardPatientDetail",
+		method : "post",
+		data : JSON.stringify(data),
+		contentType: "application/json;charset=utf-8",
+		dataType : "json",
+		success : function(result) {
+			$('#hsptNo').val(result.hsptNo);
+			$('#paNo').val(result.paNo);
+			$('#paName').val(result.paName);
+			$('#paReg').val(result.paReg);
+			$('#empNm').val(result.empNm);
+			$('#hsptInDt').val(result.hsptInDt);
+			$('#paHp').val(result.paHp);
+			$('#mediRecord').val(result.mediRecord);
+			
+			/* ***재원일수 계산*** */
+			inDate = new Date(result.hsptInDt);
+			const diff = today - inDate;
+			const diffDay = Math.floor(diff/(1000*60*60*24));
+			
+			$('#pwDays').val(diffDay);
+			
+			input_paNo.val(result.paNo);
+			input_paName.val(result.paName);
+			input_hsptNo.val(result.hsptNo);
+
+		},
+		error : function(jqXHR, status, error) {
+			console.log(jqXHR);
+			console.log(status);
+			console.log(error);
+		}
+	});
+}
+
+/* 간호기록 입력  */
+function nrec_insert(){
+	let nrec_hsptNo = document.querySelector('#nursingRecord_hsptNo');
+	let nrec_paNo = document.querySelector('#nursingRecord_paNo');
+	let nrec_paName = document.querySelector('#nursingRecord_paName');
+	let nrec_textarea = document.querySelector('#nursingRecord_textarea');
+	
+	let data = {
+			hsptNo : nrec_hsptNo.value,
+			paNo : nrec_paNo.value,
+			nrecCont : nrec_textarea.value
+	}
+	if(!nrec_hsptNo.value || !nrec_paNo.value || !nrec_textarea.value){
+		swal("입력실패", "해당 환자의 입퇴원 번호를 클릭해주세요", 'warning')
+	}else{
+		$.ajax({
+			url : "nrecInsert",
+			method : "post",
+			data : JSON.stringify(data),
+			contentType: "application/json;charset=utf-8",
+			dataType : "json",
+			success : function(result) {
+		        // 해당 환자의 간호기록 리스트 띄우기
+		        nrec_list(nrec_hsptNo.value);
+		        
+				swal("입력성공", "간호기록이 등록되었습니다.", 'success')
+				
+				// 입력태그 값 초기화
+// 				$("#nursingRecord_hsptNo").val("");
+// 				$("#nursingRecord_paNo").val("");
+// 		        $("#nursingRecord_paName").val("");
+		        $("#nursingRecord_textarea").val("");
+		        
+			},
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR);
+				console.log(status);
+				console.log(error);
+			}
+		});	
+	}
+}
+
+/* 간호기록 리스트 출력  */
+function nrec_list(hsptNo){
+	let data = {
+			hsptNo : hsptNo
+	}
+	
+	$.ajax({
+		url : "nrecList",
+		method : "post",
+		data : JSON.stringify(data),
+		contentType: "application/json;charset=utf-8",
+		dataType : "json",
+		success : function(result) {
+			console.log(result)
+			let trTags = [];
+            $.each(result, function(i, v){
+               let trTag = $("<tr>")
+                           .append(
+                              $("<td>").html(v.nrecNo)    
+                              , $("<td>").html(v.empNm)        
+                              , $("<td>").html(v.paName)     
+                              , $("<td>").html(v.nrecCont)
+                              , $("<td>").html(v.nrecDate)
+                           );
+               trTags.push(trTag)
+            });
+            $("#nrecTbody").html(trTags);
+		},
+		error : function(jqXHR, status, error) {
+			console.log(jqXHR);
+			console.log(status);
+			console.log(error);
+		}
+	});
+}
+
+</script>
+<body>
+	<div class="ward-wrapper">
+		<div class="patient-info card ward-div">
+			<h4>환자 정보</h4>
+		    	<div class="form-group">
+				    <label class="ward_title" for="hsptNo">입퇴원 번호</label>
+				    <input type="text" name="hsptNo" id="hsptNo" class="ward_input" readonly="readonly" />
+				</div>
+		    	<div class="form-group">
+				    <label class="ward_title" for="paNo">환자번호</label>
+				    <input type="text" name="paNo" id="paNo" class="ward_input" readonly="readonly" />
+				</div>
+                <div class="form-group">
+				    <label class="ward_title" for="paName">환자명</label>
+				    <input type="text" name="paName" id="paName" class="ward_input" readonly="readonly" />
+				</div>
+				<div class="form-group">
+				    <label class="ward_title" for="paReg">생년월일</label>
+				    <input type="text" name="paReg" id="paReg" class="ward_input" readonly="readonly">
+				</div>
+                <div class="form-group">
+				   	<label class="ward_title" for="empNm">담당의사</label>
+				    <input type="text" name="empNm" id="empNm" class="ward_input" readonly="readonly" />
+				</div>
+				<div class="form-group">
+				    <label class="ward_title" for="hsptInDt">입원일자</label>
+				    <input type="text" name="hsptInDt" id="hsptInDt" class="ward_input" readonly="readonly" />
+				</div>
+                <div class="form-group">
+				    <label class="ward_title" for="pwDays">재원일수</label>
+				    <input type="text" class="ward_input" name="pwDays" id="pwDays" readonly="readonly" />
+				</div>
+                <div class="form-group">
+				    <label class="ward_title" for="paHp">연락처</label>
+				    <input type="text" name="paHp" id="paHp" class="ward_input" readonly="readonly" />
+				</div>
+                <div class="form-group">
+				    <label class="ward_title" for="mediRecord">입원 메모</label>
+				    <textarea class="ward_input" id="mediRecord" readonly="readonly"></textarea>
+				</div>
+		</div>
+		<div class="patient-manage card ward-div">
+			<h4>환자관리</h4>
+			<div id="patient-manage-in">
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr class="table-primary">
+							<th>입퇴원번호</th>
+							<th>병실</th>
+							<th>병상</th>
+							<th>환자명</th>
+							<th>상병</th>
+						</tr>
+					</thead>
+					<tbody id='wardPatientListBody'>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="ward-order-container ward-div">
+			<div class="ward-order-item1 card ward-div">
+				<h4>병동order</h4>
+				<div class="tab">
+				    <ul class="tabnav">
+				      <li><a href="#diet">식이</a></li>
+				      <li><a href="#io">IO</a></li>
+				      <li><a href="#vital">vital</a></li>
+				      <li><a href="#nursingrecord">간호기록</a></li>			      
+				    </ul>
+				    <div class="tabcontentWrap">
+					    <div class="tabcontent">
+					      <div id="diet"></div>
+					      <div id="io"></div>
+					      <div id="vital"></div>
+					      <div id="nursingrecord">
+					      	<table class="table table-bordered table-hover">
+					      		<thead>
+					      			<tr class="table-primary">
+					      				<th>번호</th>
+					      				<th>작성자</th>
+					      				<th>환자명</th>
+					      				<th>내용</th>
+					      				<th>날짜</th>
+					      			</tr>
+					      		</thead>
+					      		<tbody id='nrecTbody'></tbody>
+					      	</table>
+					      </div>
+					    </div>
+					</div>
+				  </div>	
+			</div>
+			<div class="ward-order-item2 card ward-div">
+				<div class="tap_input" id="diet-in">
+					<h4>식이</h4>
+				</div>
+				<div class="tap_input" id="io-in">
+					<h4>IO</h4>
+				</div>
+				<div class="tap_input" id="vital-in">
+					<h4>vital</h4>
+				</div>
+				<div class="tap_input" id="nursingRecord-in">
+					<div id="nursingRecord-in-top">
+						<h4>간호기록</h4>
+					</div>
+					<table>
+						<tr>
+							<td>입퇴원번호</td>
+							<td><input style="float:left" class="input_hsptNo" id="nursingRecord_hsptNo" type="text" value="" readonly="readonly"></td>
+						</tr>
+						<tr>
+							<td>환자번호</td>
+							<td><input style="float:left" class="input_paNo" id="nursingRecord_paNo" type="text" value="" readonly="readonly"></td>
+						</tr>
+						<tr>
+							<td>환자명</td>
+							<td><input style="float:left" class="input_paName" id="nursingRecord_paName" type="text" value="" readonly="readonly"></td>
+						</tr>
+						<tr>
+							<td>내용</td>
+							<td><textarea id="nursingRecord_textarea"></textarea></td>
+						</tr>
+					</table>
+					<input class="btn_blue" id="nursingRecord-register" type="button" value="검사등록" onclick="nrec_insert()">
+				</div>
+			</div>			
+		</div>
+	</div>
+</body>
+
+<script>
+	/* tab 메뉴 */
+$(function(){
+	$('.tabcontent > div').hide();
+	$('.tabnav a').click(function () {
+	  $('.tabcontent > div').hide().filter(this.hash).fadeIn();
+	  $('.tabnav a').removeClass('active');
+	  $(this).addClass('active');
+	  
+	  let hash = this.hash;
+	  inputTapChange(hash);
+	  
+	  return false;
+	}).filter(':eq(0)').click();
+});
+	
+function inputTapChange(hash){
+	let diet_in = $('#diet-in');
+	let io_in = $('#io-in');
+	let vital_in = $('#vital-in');
+	let nursingRecord_in = $('#nursingRecord-in');
+	const z_index_style_1 = {
+			style : "z-index: -1"
+	}
+	const z_index_style_100 = {
+			style : "z-index: 100"
+	}
+	
+	diet_in.attr(z_index_style_1);
+	io_in.attr(z_index_style_1);
+	vital_in.attr(z_index_style_1);
+	nursingRecord_in.attr(z_index_style_1);
+	
+	switch (hash) {
+	case '#diet':
+		diet_in.attr(z_index_style_100);
+		break;
+	case '#io':
+		io_in.attr(z_index_style_100);
+		break;
+	case '#vital':
+		vital_in.attr(z_index_style_100);
+		break;
+	case '#nursingrecord':
+		nursingRecord_in.attr(z_index_style_100);
+		break;
+
+	default:
+		break;
+	}
+
+	
+}
+</script>

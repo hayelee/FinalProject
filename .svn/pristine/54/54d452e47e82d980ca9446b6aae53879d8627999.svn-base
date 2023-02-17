@@ -1,0 +1,165 @@
+@charset "UTF-8";
+
+/* ***********************header 시작******************************* */
+*{
+	margin:0px;
+	padding:0px;
+}
+.menu{
+    display: flex;
+    background: #4E73DF;
+    font-family: 'NanumSquareRound';
+}
+.menu-item{
+    flex-grow: 1;
+    background: #4E73DF;
+    transition: 0.5s;
+}
+.menu-item:hover {
+    flex-grow: 1.5;
+/*     background: #F7AA00; 마우스 올렸을 때 색*/
+}
+.menu-link{
+    display : block;
+    padding: 1em;
+    font-size : 1.2rem;
+    font-weight: bold;
+    color : white;
+    text-decoration: none;
+    text-align: center;
+}
+.menu-link:hover{
+    color:black; 
+}
+ul{
+    list-style:none;
+    padding: 0;
+}
+#main_logo{
+    text-align: center;
+    padding-top : 10px;
+    padding-left: 10px;
+}
+.menu-link-user{
+    display : block;
+    padding: 1.5em;
+    font-size : 0.9rem;
+    color : white;
+    text-decoration: none;
+    text-align: center;
+}
+
+.user-photo-link{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: gold;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    margin: 0px;
+    margin-top: 10px;
+}
+.user_info {
+	font-family: 'normal';
+}
+dl, ol, ul {
+    margin-bottom: 0; 
+}
+/* **************************header 끝****************************** */
+
+/* **************************card 시작****************************** */
+.card{
+	background-color: #ddd;
+    border-radius: 5px;
+	border-top: 5px solid #4F80FF;
+    box-shadow: 1px 1px 5px grey;
+    padding : 10px;
+}
+.card table tr.fixedHeader {
+	position: sticky;
+	top: -1px;
+	background-color:white;
+}
+table td { white-space: nowrap; text-overflow: ellipsis; overflow: hidden;}
+/* **************************card 끝****************************** */
+
+/* ************************* a태그를 버튼처럼 꾸며줌 시작***************************** */
+.a_btn{ background-color: #00334E; color: white; padding: 5px 20px; text-align: center; text-decoration: none; display: inline-block; border: none;}
+.a_btn:hover { background-color: #F7AA00;}
+/* ************************* a태그를 버튼처럼 꾸며줌 끝***************************** */
+
+/* ************************* 버튼 스타일 시작 *************************************** */
+.btn_blue {
+	width: 6.25rem;
+	height: 2.5rem;
+	background-color : #16308D;
+	color: white;
+	border: none;
+	margin: 0.188rem;
+    box-shadow: 1px 1px 2px grey;
+}
+/* ************************* 버튼 스타일 끝 *************************************** */
+
+
+
+
+/* -------------------검색창-------시작---------------- */
+.search-form {
+	float: right;
+	padding-bottom: 20px;
+	padding-top: ‒43;
+	padding-top: 20px;
+}
+
+.search-form>select {
+	width: 6.5rem;
+	height: 1.6rem;
+	font-size: 13px;
+	border: 1px solid #ddd;
+}
+
+.search-form>.btn-submit {
+	width: 5.25rem;
+	height: 1.7rem;
+	background-color: #004262;
+	color: white;
+	border: none;
+/* 	margin: 0.188rem; */
+/* 	box-shadow: 1px 1px 2px grey; */
+	font-size: 13px;
+}
+
+.search-form>input {
+	width: 14.25rem;
+	height: 1.6rem;
+/* 	padding-bottom: 5px; */
+	font-size: 16px;
+	border: 1px solid #ddd;
+}
+
+.film-submit-in {
+	width: 31.938rem;
+	height: 23.438rem;
+	margin: 0.625rem;
+	padding: 1.25rem;
+	background-color: #F2F1F1;
+	border-radius: 5px;
+	border-top: 5px solid #4F80FF;
+	box-shadow: 1px 1px 5px grey;
+	overflow: auto;
+	margin-top: 30px;
+	margin-left: 40px;
+}
+
+.film-submit-table {
+	width: 37.5rem;
+	height: 15rem;
+	padding-top: 0.5rem;
+}
+
+.film-submit {
+	width: 41.438rem;
+	height: 21.875rem;
+}
+/* -------------------검색창-------끝---------------- */
