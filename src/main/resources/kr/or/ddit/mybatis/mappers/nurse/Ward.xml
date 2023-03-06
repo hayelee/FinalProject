@@ -3,10 +3,15 @@
 <mapper namespace="kr.or.ddit.nurse.dao.WardDAO">
    <select id="selectWardPatientList" resultType="kr.or.ddit.nurse.vo.WardVO">
       SELECT 
-          A.HSPT_NO, A.WR_RNO, A.BED_NO, A.PA_NAME, A.HSPT_YN, A.TRM_CD
+          A.HSPT_NO
+          , A.WR_RNO
+          , A.BED_NO
+          , A.PA_NAME
+          , A.HSPT_YN
+          , A.TRM_CD
+          , A.PA_REG
           , B.DISEASE_CD, B.ICD_NAME
-       FROM V_HOSP A
-        LEFT OUTER JOIN DIAGNOSIS_HISTORY B
+       FROM V_HOSP A LEFT OUTER JOIN DIAGNOSIS_HISTORY B
          ON A.TRM_CD = B.TRM_CD
         AND A.DISEASE_CD = B.DISEASE_CD
       WHERE HSPT_YN='Y'
@@ -27,15 +32,11 @@
           NREC_NO
           , NREC_CONT
           , NREC_DATE
-          , EMP_NO
-          , PA_NO
           , HSPT_NO
       ) VALUES (
          'NR'||LPAD(SEQ_NREC.NEXTVAL, 4,'0')
           , #{nrecCont}
           , TO_CHAR(SYSDATE, 'YYYY-MM-DD')
-          , 6
-          , #{paNo}
           , #{hsptNo}
       )
    </insert>
@@ -54,7 +55,6 @@
           vt_bp,
           vt_rp,
           vt_ne,
-          emp_no,
           hspt_no
       ) VALUES (
          'VI'||LPAD(SEQ_VITAL.NEXTVAL, 4,'0')
@@ -64,23 +64,23 @@
           , #{vtBp,jdbcType=NUMERIC}
           , #{vtRp,jdbcType=NUMERIC}
           , #{vtNe,jdbcType=VARCHAR}
-          , 6
           , #{hsptNo,jdbcType=NUMERIC}
       )
    </insert>
    
    <select id="selectNrecList" resultType="kr.or.ddit.nurse.vo.NrecVO" parameterType="int">
       SELECT
-          A.NREC_NO ,A.NREC_CONT ,TO_CHAR(A.NREC_DATE, 'YYYY-MM-DD') AS NREC_DATE ,A.EMP_NO ,A.PA_NO ,A.HSPT_NO
-          , B.PA_NAME
-          , C.EMP_NM
-      FROM NURSING_RECORD A
-      INNER JOIN PATIENT B
-         ON A.PA_NO = B.PA_NO
-      INNER JOIN EMPLOYEE C
-         ON A.EMP_NO = C.EMP_NO
-      WHERE A.HSPT_NO = #{hsptNo}
-      ORDER BY 1
+		  A.NREC_NO 
+		  , A.NREC_CONT 
+		  , TO_CHAR(A.NREC_DATE, 'YYYY-MM-DD') AS NREC_DATE 
+		  , A.EMP_NO 
+		  , A.HSPT_NO
+		  , C.EMP_NM
+		FROM NURSING_RECORD A
+		LEFT OUTER JOIN EMPLOYEE C
+		 ON A.EMP_NO = C.EMP_NO
+		WHERE A.HSPT_NO = #{hsptNo}
+		ORDER BY 3 desc
    </select>
    
 <!--    <resultMap type="PatientVO" id="PatientMap" autoMapping="true"> -->
@@ -109,7 +109,7 @@
       INNER JOIN VITAL B
          ON A.HSPT_NO = B.HSPT_NO
       WHERE A.HSPT_NO = #{hsptNo}
-      ORDER BY B.VT_NO
+      ORDER BY VT_DATE desc
    </select>
    
    <select id="countIoList" resultType="int" parameterType="kr.or.ddit.commons.vo.IntakeOutputVO">
@@ -154,7 +154,7 @@
       LEFT OUTER JOIN OUTPUT_CATEGORY E
          ON C.OUTPUT_CATE_CD = E.OUTPUT_CATE_CD
       WHERE A.HSPT_NO = #{hsptNo}
-      ORDER BY IO_DATE
+      ORDER BY IO_DATE desc
    </select>
    
    <resultMap type="HospitalizationVO" id="dietRecordMap" autoMapping="true">
@@ -178,6 +178,7 @@
       INNER JOIN DIET_CATEGORY C
       ON B.DIET_CATE_CD = C.DIET_CATE_CD
       WHERE A.HSPT_NO = #{hsptNo}
+      order by DIET_DATE desc
    </select>
    
    <!-- intake 입력 -->
@@ -189,7 +190,6 @@
       , INTAKE_CAPA
       , INTAKE_NE
       , INTAKE_CATE_CD
-      , EMP_NO
       , IO_DATE
       , HSPT_NO
    ) VALUES (
@@ -197,7 +197,6 @@
       , #{intakeCapa,jdbcType=VARCHAR}
       , #{intakeNe,jdbcType=VARCHAR}
       , #{intakeCateCd,jdbcType=VARCHAR}
-      , 6
       , #{ioDate,jdbcType=DATE}
       , #{hsptNo,jdbcType=NUMERIC}
    )
@@ -212,7 +211,6 @@
           , output_capa
           , output_ne
           , output_cate_cd
-          , emp_no
           , io_date
           , hspt_no
       ) VALUES (
@@ -220,7 +218,6 @@
          , #{outputCapa,jdbcType=VARCHAR}
          , #{outputNe,jdbcType=VARCHAR}
          , #{outputCateCd,jdbcType=VARCHAR}
-         , 6
          , #{ioDate,jdbcType=DATE}
          , #{hsptNo,jdbcType=NUMERIC}
       )
@@ -234,7 +231,6 @@
           diet_date,
           diet_ne,
           diet_cate_cd,
-          emp_no,
           hspt_no,
           diet_time
       ) VALUES (
@@ -242,7 +238,6 @@
          , #{dietDate,jdbcType=DATE}
          , #{dietNe,jdbcType=VARCHAR}
          , #{dietCateCd,jdbcType=VARCHAR}
-         , 6
          , #{hsptNo,jdbcType=NUMERIC}
          , #{dietTime,jdbcType=DATE}
       )

@@ -42,23 +42,23 @@
 	</filter-mapping>
 	
 		<!-- put, delete, patch를 사용하기 위한 필터 -->
-<!-- 	<filter> -->
-<!--    		<filter-name>hiddenHttpMethodFilter</filter-name> -->
-<!--       	<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class> -->
-<!--    	</filter> -->
-<!--    	<filter-mapping> -->
-<!--       	<filter-name>hiddenHttpMethodFilter</filter-name> -->
-<!--       	<url-pattern>/*</url-pattern> -->
-<!--    	</filter-mapping> -->
+	<!-- <filter>
+   		<filter-name>hiddenHttpMethodFilter</filter-name>
+      	<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+   	</filter>
+   	<filter-mapping>
+      	<filter-name>hiddenHttpMethodFilter</filter-name>
+      	<url-pattern>/*</url-pattern>
+   	</filter-mapping> -->
 	
-<!-- 	<filter>
+	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
-	</filter-mapping> -->
+	</filter-mapping>
 	
 	<!-- servlet -->
 	<servlet>
@@ -74,4 +74,18 @@
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+	
+	<session-config>
+		<session-timeout>600</session-timeout>
+	</session-config>
+	
+	<!-- errorPage -->
+	<error-page>
+  		<error-code>500</error-code>
+  		<location>/errors/error500.jsp</location>
+  	</error-page>
+  	<error-page>
+  		<error-code>404</error-code>
+  		<location>/errors/error404.jsp</location>
+  	</error-page>
 </web-app>

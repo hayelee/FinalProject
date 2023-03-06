@@ -100,12 +100,26 @@
 	
 	<update id="updateGO" parameterType="GroupOrderVO">
 	 	UPDATE  group_order
-		SET     go_ko = #{goKo,jdbcType=VARCHAR}
-		WHERE	go_cd = #{goCd,jdbcType=VARCHAR}
+		SET     go_cd = #{goCd,jdbcType=VARCHAR}
+				, go_ko = #{goKo,jdbcType=VARCHAR}
+		WHERE	go_cd = #{prevGoCd,jdbcType=VARCHAR}
 	</update>
 	
 	<delete id="deleteGO" parameterType="String">
 	 	DELETE	FROM group_order
+	 	WHERE	go_cd = #{goCd,jdbcType=VARCHAR}
+	</delete>
+	
+	<delete id="deleteGODisList" parameterType="String">
+		DELETE	FROM disease_go
+	 	WHERE	go_cd = #{goCd,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteGOPreList" parameterType="String">
+		DELETE	FROM prescription_go
+	 	WHERE	go_cd = #{goCd,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteGOSymList" parameterType="String">
+		DELETE	FROM symptom_go
 	 	WHERE	go_cd = #{goCd,jdbcType=VARCHAR}
 	</delete>
 </mapper>

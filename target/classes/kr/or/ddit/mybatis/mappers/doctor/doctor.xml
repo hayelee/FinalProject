@@ -33,25 +33,30 @@
 		<collection property="filmOrderVOList" ofType="FilmOrderVO" autoMapping="true">
 			<id property="filmCd" column="FILM_CD"/>
 		</collection>
+		<collection property="ptDocumentList" ofType="PtDocumentVO" autoMapping="true">
+			<id property="pdNo" column="PD_NO"/>
+		</collection>
 	</resultMap>
 	<select id="selectTrmChart" parameterType="String" resultMap="trmChartMap">
 		WITH trmChartView AS    (
-		SELECT  A.*, C.EMP_NM
-		FROM    TRM_CHART A INNER JOIN RECEPTION B ON (A.RCP_NO = B.RCP_NO)
-							INNER JOIN EMPLOYEE C ON (A.EMP_NO = C.EMP_NO)
-		WHERE   B.RCP_NO = #{rcpNo}    
+		    SELECT  A.TRM_CD, A.TRM_DT, A.MEDI_RECORD, A.EMP_NO, A.RCP_NO
+		            , C.EMP_NM
+		    FROM    TRM_CHART A INNER JOIN RECEPTION B ON (A.RCP_NO = B.RCP_NO)
+		                        INNER JOIN EMPLOYEE C ON (A.EMP_NO = C.EMP_NO)
+		    WHERE   B.RCP_NO = #{rcpNo}   
 		)
 		SELECT  T.TRM_CD AS TRM_CODE, T.MEDI_RECORD, TO_CHAR(T.TRM_DT, 'YYYY/MM/DD') AS TRM_DT, T.EMP_NO, T.RCP_NO, T.EMP_NM
-		        , B.*
-		        , C.*
-		        , D.*
-		        , E.*
+		        , B.DISEASE_CD, B.ICD_NAME, B.OPER_TF, B.PHYSIOTHERAPY_TF
+		        , C.SYM_CD, C.SYM_DETAIL
+		        , D.PRE_CD, D.PRE_DETAIL, D.PRE_NT, D.PRE_TOTAL, D.PRICE, D.INJC_PTH_NM, D.UNIT, D.PAY_TP_NM
+		        , E.FILM_CD,  TO_CHAR(E.FILM_DATE, 'YYYY/MM/DD') AS FILM_DATE
+		        , F.PD_NO, F.PD_DT, F.PD_CONT
 		FROM    TRMCHARTVIEW T  
 		        LEFT OUTER JOIN DIAGNOSIS_HISTORY B  ON (T.TRM_CD = B.TRM_CD)
 		        LEFT OUTER JOIN SYMPTOM_HISTORY C ON (T.TRM_CD = C.TRM_CD)
 		        LEFT OUTER JOIN PRESCRIPTION_HISTORY D ON (T.TRM_CD = D.TRM_CD)
 		        LEFT OUTER JOIN FILM_ORDER E ON (T.TRM_CD = E.TRM_CD)
-		        
+		        LEFT OUTER JOIN PT_DOCUMENT F ON (T.TRM_CD = F.TRM_CD)		        
 	</select>
 	
 	<select id="selectTrmChartList" parameterType="String" resultType="TrmChartVO">
@@ -212,11 +217,23 @@
 	<select id="selectDvTr" resultType="DivisionTreatVO">
 		SELECT *	FROM DIVISION_TREAT
 	</select>
+	
 	<update id="updateTrmChart" parameterType="TrmChartVO">
 		UPDATE	TRM_CHART
 		SET		medi_record = #{mediRecord,jdbcType=VARCHAR}
 		WHERE	TRM_CD = #{trmCd,jdbcType=VARCHAR}
 	</update>
+	
+	<select id="selectWSComplete" parameterType="String" resultType="WaitStatusVO">
+		SELECT  *
+		FROM    (
+			        SELECT  WAITST_CD, ROWNUM, WAIT_NO
+			        FROM    WAITING_HISTORY 
+			        WHERE   RCP_NO = #{rcpNo}
+			        ORDER   BY WAIT_NO DESC
+		        )
+		WHERE   ROWNUM = 1
+	</select>
 	
 	<delete id="deleteDiagHist">
 		DELETE FROM diagnosis_history
@@ -234,5 +251,19 @@
 		DELETE FROM film_order
 		WHERE	trm_cd = #{trmCd,jdbcType=VARCHAR}
 	</delete>
+	
+	
+	<resultMap type="FilmAtchVO" id="filmAtchVO" autoMapping="true">
+		<id property="fiatCd" column="FIAT_CD" />
+		<collection property="filmAtchDetailVOList" ofType="FilmAtchDetailVO" autoMapping="true">
+			<id property="attNo" column="ATT_NO"/>		
+		</collection>
+	</resultMap>
+	
+	<select id="selectFilmResult" parameterType="String" resultMap="filmAtchVO">
+		SELECT  A.ATT_SAVENAME, A.ATT_NO, A.ATT_STRE_COURS, A.ATT_SAVENAME, B.TRM_CD, B.FIAT_CD
+		FROM    FILM_ATCH_DETAIL A INNER JOIN  FILM_ATCH B ON (A.FIAT_CD = B.FIAT_CD)
+		WHERE   B.TRM_CD = #{trmCd}
+	</select>
 	
 </mapper>
