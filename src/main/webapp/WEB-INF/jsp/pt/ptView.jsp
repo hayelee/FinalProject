@@ -128,7 +128,7 @@ textarea {height:145px; resize:none;}
 						</div>
 					</div>
 					<div class="mb-3 row">
-						<label for="inputPassword" class="col-sm-3 col-form-label">상병코드</label>
+						<label for="inputPassword" class="col-sm-3 col-form-label">증상코드</label>
 						<div class="col-sm-9">
 							<input type="text" class="form-control" id="writeChartRc" readonly="readonly" disabled>
 						</div>
@@ -465,7 +465,7 @@ let $writeChartCd = $('.writeChartCd');
 		$("#tr_"+rcpNo).siblings('tr').removeClass("dblclick-on")
 		$("#tr_"+rcpNo).addClass("dblclick-on")
 		let data = "${ptAssinmentList[0]}";
-
+		
 		console.log("pthis : ",pthis);
 		console.log("rcpNo : " ,rcpNo);
 		console.log("?????????????????????? : " ,rcpNo)
@@ -480,12 +480,13 @@ let $writeChartCd = $('.writeChartCd');
 	    	},
 			success : function(list) {
 				//작성 할 치료일지에 동일한 데이터 뿌려주기
+				console.log("list ::::::::::::::::::::",list);
 				$writeChartCd.val(list[0].trmCd); //진료차트
 				$('#writeChartDate').val(list[0].receptionVO.rcpDate.substring(0,10)); //진료일자출력/ substring으로 시간자르기
 				$('#writeChartPaNo').val(list[0].patientVO.paNo); //환자접수번호
 				$('#writeChartPaNm').val(list[0].patientVO.paName); //환자이름
 				$('#writeChartPaReg').val(list[0].patientVO.paReg); //생년월일
-				$('#writeChartRc').val(list[0].symptomVOList[0].symCd); //상병코드
+				$('#writeChartRc').val(list[0].symptomVOList[0].symCd); //증상코드
 				$('#writeChartRl').val(list[0].symptomVOList[0].symDetail); //증상
 				
 				$('#writeChartRoom').val(list[0].receptionVO.officeCd); //진료실
@@ -844,7 +845,7 @@ $(".bedbutton").on("click",function(){
 	
 	//ptDocument 기록서 get방식으로 단순 출력
 	let $ptDocumentBody= $("#ptDocumentBody");
-	let f_getPtDocu =()=> {
+	let f_getPtDocu=()=>{
 		
 		$ptDocumentBody.empty();
 		$.ajax({

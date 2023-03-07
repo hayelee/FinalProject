@@ -22,7 +22,7 @@
 /* 	margin-top: 65px; */
 }
 
-.pTag {
+.pTag {  
 	color: #868e96;
 	font-family: 'spo';
 	margin-bottom: 0px;
@@ -46,14 +46,16 @@ p {
 }
 
 .btn-submit {
-	width: 2.25rem;
-	height: 1.5rem;
-	background-color: #16308D;
+/* 	width: 2.25rem; */
+/* 	height: 1.5rem; */
+	background-color: #004262;
 	color: white;
 	border: none;
 	margin: 0.188rem;
 	box-shadow: 1px 1px 2px grey;
 	font-size: 14px;
+	width: 3.25rem;
+    height: 1.4rem;
 }
 
 .film-select {
@@ -78,6 +80,9 @@ p {
 	width: 100%;
 	height: 17rem;
 	padding: 1em;
+}
+.btn_blue {
+    top: 36%;
 }
 </style>
 
@@ -203,26 +208,25 @@ p {
 								</table>
 						</div>
 						<div id="filmOrderTable">
-							<label id="filmCdLabel" class="form-label"
-								style="margin-top: 30px;">촬영오더</label> <input type="text"
-								name="filmCd" class="form-control form-control-sm"
+							<label id="filmCdLabel" class="form-label" style="margin-top: 30px;">촬영오더</label> 
+							<input type="text" name="filmCd" class="form-control form-control-sm" style=" width: 96%;"
 								id="filmCd_offcanvas" readonly="readonly" disabled>
 						</div>
 						<div class="radiChartTable" id="filmCateTable">
 							<label id="filmCdLabel2" class="form-label" style="margin-top: 30px;">촬영구분</label> 
-							<input type="text" name="filmCd" class="form-control form-control-sm" id="filmCd2_offcanvas" readonly="readonly" style="font-size: 12px;" disabled>
+							<input type="text" name="filmCd" class="form-control form-control-sm" id="filmCd2_offcanvas" readonly="readonly" style="font-size: 12px; width: 96%;" disabled>
 						</div>
 						<div class="filebox" id="filmImageBox">
-							<input type="file" class="filmImageInput" name="filmImage" accept="image/*" multiple />
+							<input type="file" class="filmImageInput" name="filmImage" accept="image/*" multiple style=" margin-top: 10px;"/>
 							<form:errors path="filmImage" element="span" cssClass="text-danger" />
 						</div>
 						<div style="margin-top: 30px;">
 							<label class="form-label" style="margin-top: 3px">기록</label> 
 							<textarea name="mediRecord" class="form-control form-control-sm" id="mediRecord_offcanvas"
-								readonly="readonly" style="font-size: 12px; height: 63px;" disabled></textarea> 
+								readonly="readonly" style="font-size: 12px; width: 96%; height: 80px;" disabled></textarea> 
 						</div>
 						<div class="offcanvas-footer col-12" id="filmInsertBtn">
-							<button type="button" class="btn_blue" style="float: right;">저장</button>
+							<button type="button" class="btn_blue" style="float: right; margin-top: 10px;">저장</button>
 						</div>
 					</div>
 				</div> <!-- zzzzzzzzzzzzzzzzzzz -->
@@ -331,10 +335,12 @@ $("#filmInsertBtn").on("click",function(){
 	    },
 		success : function(result) { /* 응답데이터 받아오기 */
 			console.log("성공ㅇㅇㅇㅇㅇ")
+			
 			if(result>0){
 				swal("저장실패", "촬영실배정이 완료되지 않았습니다!", "warning");
 			}else{
 				fileUpload();
+				$(".filmImageInput").val("");
 			}
 		},
 		error : function(jqXHR, status, error) {

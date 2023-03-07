@@ -28,6 +28,7 @@ public class EmployeeVO {
 	private String posiCd;
 	private String majorCd;
 	
+	private String jobName;
 	private String posiName;
 	
 	private List<VitalVO> vitalList;

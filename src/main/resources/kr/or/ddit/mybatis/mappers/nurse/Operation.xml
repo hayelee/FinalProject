@@ -211,17 +211,17 @@
 	INNER JOIN PATIENT D
 	ON C.PA_NO = D.PA_NO
 	WHERE E.OP_STATE = 'T'
-	ORDER BY OP_NO
 	<if test="searchOption!=null">
-			<choose>
-				<when test="searchOption=='no'">
-					AND D.PA_NO = #{searchWord}
-				</when>
-				<when test="searchOption=='name'">
-					AND D.PA_NAME LIKE '%' || #{searchWord} || '%'
-				</when>
-			</choose>
-		</if>
+		<choose>
+			<when test="searchOption=='no'">
+				AND D.PA_NO = #{searchWord}
+			</when>
+			<when test="searchOption=='name'">
+				AND D.PA_NAME LIKE '%' || #{searchWord} || '%'
+			</when>
+		</choose>
+	</if>
+	ORDER BY OP_NO
 	</select>
 	
 	<!-- 검사결과를 등록 -->
@@ -243,17 +243,14 @@
 	<select id="selectCexDetail" parameterType="CexVO" resultType="CexVO">
 	/* kr.or.ddit.nurse.dao.OperationDAO.selectCexDetail */
 		SELECT
-		    A.cex_cbc
-		    , A.cex_ecg
-		    , A.cex_ua
-		    , A.cex_pfts
-		    , TO_CHAR(A.cex_date, 'YY/MM/DD') AS cex_date
-		    , A.cex_ne
-		    , A.emp_no
-		    , B.emp_nm
-		FROM clinical_examination A
-		INNER JOIN EMPLOYEE B
-		ON A.EMP_NO = B.EMP_NO
+		    cex_cbc
+		    , cex_ecg
+		    , cex_ua
+		    , cex_pfts
+		    , TO_CHAR(cex_date, 'YY/MM/DD') AS cex_date
+		    , cex_ne
+		    , emp_no
+		FROM clinical_examination
 		WHERE CEX_NO = #{cexNo}
 	</select>
 	
@@ -301,6 +298,8 @@
 		    , E.OP_START_TIME
 		    , E.OP_END_TIME
 		    , E.OP_RECORD
+		    , G.OP_KR_NM
+            , G.OP_EN_NM
 		FROM TRM_CHART A
 		INNER JOIN DIAGNOSIS_HISTORY B ON A.TRM_CD = B.TRM_CD
 		INNER JOIN OPERATION_INFOMATION E ON B.DISEASE_CD = E.DISEASE_CD AND B.TRM_CD = E.TRM_CD
@@ -339,19 +338,23 @@
 		SELECT
 		    E.op_no
 		    , D.PA_NAME
-            , D.PA_REG
-            , E.OP_RESERV_STARTTIME
+		    , D.PA_REG
+		    , E.OP_RESERV_STARTTIME
+		    , G.OP_KR_NM
+		    , G.OP_EN_NM
 		FROM TRM_CHART A
 		INNER JOIN DIAGNOSIS_HISTORY B
-		ON A.TRM_CD = B.TRM_CD
+		    ON A.TRM_CD = B.TRM_CD
 		INNER JOIN OPERATION_INFOMATION E
-		ON B.DISEASE_CD = E.DISEASE_CD AND B.TRM_CD = E.TRM_CD
+		    ON B.DISEASE_CD = E.DISEASE_CD AND B.TRM_CD = E.TRM_CD
+		LEFT OUTER JOIN OPERATION G
+		    ON E.OP_CD = G.OP_CD
 		LEFT OUTER JOIN CLINICAL_EXAMINATION F
-		ON B.DISEASE_CD = F.DISEASE_CD AND B.TRM_CD = F.TRM_CD
+		    ON B.DISEASE_CD = F.DISEASE_CD AND B.TRM_CD = F.TRM_CD
 		INNER JOIN RECEPTION C
-		ON A.RCP_NO = C.RCP_NO
+		    ON A.RCP_NO = C.RCP_NO
 		INNER JOIN PATIENT D
-		ON C.PA_NO = D.PA_NO
+		    ON C.PA_NO = D.PA_NO
 		WHERE E.OP_STATE = 'F'
 		ORDER BY E.OP_RESERV_STARTTIME
 	</select>

@@ -5,7 +5,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
 <security:authorize access="isAuthenticated()">
-	<security:authentication property="principal.realMember" var="employee"/>
+<%-- 	<security:authentication property="principal.realMember" var="employee"/> --%>
 	
 	<div id="div_pw">
 		<div>
@@ -24,14 +24,11 @@
 				<tr><th>새비밀번호</th><td><input class="form-control" type="text" name="empPw" /></td></tr>
 				<tr><th>전화번호</th><td><input class="form-control" type="text" name="empTel" value="${employee.empTel}" /><span class="text-danger">${errors.empTel}</span></td></tr>
 				<tr><th>이메일</th><td><input class="form-control" type="text" name="empMail" value="${employee.empMail}" /><span class="text-danger">${errors.empMail}</span></td></tr>
-				<tr><th>주민번호1</th><td><input class="form-control" type="number" name="empReg1" value="${employee.empReg1}" /><span class="text-danger">${errors.empReg1}</span></td></tr>
-				<tr><th>주민번호2</th><td><input class="form-control" type="number" name="empReg2" value="${employee.empReg2}" /><span class="text-danger">${errors.empReg2}</span></td></tr>
-				<tr><th>우편번호</th><td><input class="form-control" type="number" name="empZip" value="${employee.empZip}" /><span class="text-danger">${errors.empZip}</span></td></tr>
 				<tr><th>주소</th><td><input class="form-control" type="text" name="empAdd1" value="${employee.empAdd1}" /><span class="text-danger">${errors.empAdd1}</span></td></tr>
 				<tr><th>상세주소</th><td><input class="form-control" type="text" name="empAdd2" value="${employee.empAdd2}" /><span class="text-danger">${errors.empAdd2}</span></td></tr>
-				<tr><th>직무코드</th><td><input class="form-control" type="text" name="jobCd" value="${employee.jobCd}" /><span class="text-danger">${errors.jobCd}</span></td></tr>
-				<tr><th>직급코드</th><td><input class="form-control" type="text" name="posiCd" value="${employee.posiCd}" /><span class="text-danger">${errors.posiCd}</span></td></tr>
-				<tr><th>전공코드</th><td><input class="form-control" type="text" name="majorCd" value="${employee.majorCd}" /><span class="text-danger">${errors.majorCd}</span></td></tr>
+				<tr><th>직무코드</th><td><input class="form-control" type="text" name="jobCd" value="${employee.jobCd}" readonly disabled/><span class="text-danger">${errors.jobCd}</span></td></tr>
+				<tr><th>직급코드</th><td><input class="form-control" type="text" name="posiCd" value="${employee.posiCd}" readonly disabled/><span class="text-danger">${errors.posiCd}</span></td></tr>
+				<tr><th>전공코드</th><td><input class="form-control" type="text" name="majorCd" value="${employee.majorCd}" readonly disabled/><span class="text-danger">${errors.majorCd}</span></td></tr>
 			</table>		
 		</form:form>
 		<a href="" class="a_btn" id="btn_complete">완료</a>
@@ -40,6 +37,17 @@
 </security:authorize>
 
 <script>
+
+	let empNo = $("[name=empNo]");
+	let empNm = $("[name=empNm]");
+	let empPw = $("[name=empPw]");
+	let empTel = $("[name=empTel]");
+	let empMail = $("[name=empMail]");
+	let empAdd1 = $("[name=empAdd1]");
+	let empAdd2 = $("[name=empAdd2]");
+	let jobCd = $("[name=jobCd]");
+	let posiCd = $("[name=posiCd]");
+	let majorCd = $("[name=majorCd]");
 
 	let div_pw = $("#div_pw");
 	let div_update = $("#div_update");
@@ -67,7 +75,19 @@
 		    },
 			success : function(resp) {
 				console.log(resp);
-				if(resp=='일치'){
+				if(resp){
+					let data = JSON.parse(resp);
+					
+					empNo.val(data.empNo);
+					empNm.val(data.empNm);
+					empTel.val(data.empTel);
+					empMail.val(data.empMail);
+					empAdd1.val(data.empAdd1);
+					empAdd2.val(data.empAdd2);
+					jobCd.val(data.jobCd);
+					posiCd.val(data.posiCd);
+					majorCd.val(data.majorCd);
+					
 					// div show hide
 					div_pw.hide();
 					div_update.show();

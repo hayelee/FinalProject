@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,8 +47,8 @@ public class MyPageController {
 	}
 	
 	@ResponseBody
-	@PostMapping(value="/valid", produces="text/plain;charset=UTF-8")
-	public String checkPW(
+	@PostMapping(value="/valid", produces="application/json;charset=UTF-8")
+	public EmployeeVO checkPW(
 			@RequestBody Map<String, String> password
 			, @AuthenticationPrincipal(expression="realMember") EmployeeVO emp
 			) {
@@ -57,10 +58,10 @@ public class MyPageController {
 		log.info("{}", res);
 		if(res.equals(ServiceResult.OK)) {
 			msg = "일치";
+			return emp; 
 		} else {
 			msg = "불일치";
+			return null;
 		}
-		
-		return msg; 
 	}
 }

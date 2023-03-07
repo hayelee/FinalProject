@@ -62,7 +62,10 @@ i {box-sizing: border-box ; padding : 5px; font-size : 1rem; float:right;}
 #barcodePrintTolltip{position: fixed; top: 319px; left: 678px;}
 #calendarTolltip{position: fixed; top: 90px; left: 1863px;}
 
-
+/* 부트스트랩 폰트사이즈 일괄수정 */
+.form-control {
+	font-size: 12px;
+}
 </style>
 
 <div class="oper-wrapper">
@@ -191,7 +194,7 @@ i {box-sizing: border-box ; padding : 5px; font-size : 1rem; float:right;}
 				 <div class="mb-3 row">
 				    <label for="inputPassword" class="col-sm-2 col-form-label">의무기록</label>
 				    <div class="col-sm-10">
-				      <textarea class="form-control" id="oper-pa-detail-mediRecord" readonly="readonly" disabled></textarea>  
+				      <textarea class="form-control" id="oper-pa-detail-mediRecord" readonly="readonly" disabled style="height: 90px;"></textarea>  
 				    </div>
 				 </div>
 				 <div class="mb-3 row">
@@ -225,9 +228,9 @@ i {box-sizing: border-box ; padding : 5px; font-size : 1rem; float:right;}
 				    </div>
 				 </div>
 				 <div class="mb-3 row">
-				    <label for="inputOperationDetail" class="col-sm-2 col-form-label">상병명</label>
+				    <label for="inputOperationDetail" class="col-sm-2 col-form-label">수술명</label>
 				    <div class="col-sm-10">
-				      <input type="text" class="form-control" id="oper-detail-icdName" readonly="readonly" disabled>
+				      <input type="text" class="form-control" id="oper-detail-operNm" readonly="readonly" disabled>
 				    </div>
 				 </div>
 				 <div class="mb-3 row">
@@ -257,7 +260,7 @@ i {box-sizing: border-box ; padding : 5px; font-size : 1rem; float:right;}
 				 <div class="mb-3 row">
 				    <label for="inputOperationDetail" class="col-sm-2 col-form-label">수술기록</label>
 				    <div class="col-sm-10">
-				      <textarea class="form-control" id="oper-detail-operationRecord"></textarea>  
+				      <textarea class="form-control" id="oper-detail-operationRecord" style="height: 107px;"></textarea>  
 				    </div>
 				 </div>
 				 <button style="float:right;" type="button" id="operationEnd" class="btn_blue">수술종료</button>	
@@ -602,7 +605,7 @@ function elapseTimerStop(){
 	clearInterval(elapseTimer);
 }
 
-/* 밀리세컨드를 날짜로 변환해주는 함수 */
+/* 밀리세컨드를 날짜[연도/월/일(요일)]로 변환해주는 함수 */
 function convertDate(milliSecond) {
 	  const days = ['일', '월', '화', '수', '목', '금', '토'];
 	  const data = new Date(milliSecond);  //Date객체 생성
@@ -617,13 +620,11 @@ function convertDate(milliSecond) {
 
 /* 밀리세컨드를 날짜(시간포함)로 변환해주는 함수 */
 function convertDateTime(milliSecond) {
-	  const days = ['일', '월', '화', '수', '목', '금', '토'];
 	  const data = new Date(milliSecond);  //Date객체 생성
 
 	  const year = data.getFullYear();    //0000년 가져오기
 	  const month = String(data.getMonth() + 1).padStart(2,"0");  //월은 0부터 시작하니 +1하기
-	  const date = data.getDate();        //일자 가져오기
-	  const day = days[data.getDay()];    //요일 가져오기
+	  const date = String(data.getDate()).padStart(2,"0");        //일자 가져오기
 	  const hour = String(data.getHours()).padStart(2,"0");       //시간 가져오기
 	  const minute = String(data.getMinutes()).padStart(2,"0");   //분 가져오기
 	  const second = String(data.getSeconds()).padStart(2,"0");  //초 가져오기
@@ -1177,7 +1178,7 @@ $('#operScheduleTbody').on('click', 'tr', function(event){
     	},
 		dataType : "json",
 		success : function(result) {
-			console.log('여기까지는 오나')
+			console.log(result);
 			let v_startTime = '';
 			let v_endTime = '';
 			
@@ -1196,7 +1197,14 @@ $('#operScheduleTbody').on('click', 'tr', function(event){
 			$('#oper-detail-paName').data("opNo", v_opNo);
 			$('#oper-detail-paName').val(result.paName);
 			$('#oper-detail-paReg').val(result.paReg);
-			$('#oper-detail-icdName').val(result.diagHistory.icdName);
+			
+			if(result.opKrNm){
+				let opNm = `\${result.opKrNm}(\${result.opEnNm})`;
+				$('#oper-detail-operNm').val(opNm).attr("style","color:black;");
+			}else{
+				$('#oper-detail-operNm').val("수술 선택 필요").attr("style","color:red;");
+			}
+			
 			if(result.operationJoinList[0]){
 				$('#oper-detail-empNm').val(result.operationJoinList[0].empNm).attr("style","color:black;");				
 			} else{
@@ -1243,7 +1251,7 @@ $('#operCompleteTbody').on('click', 'tr', function(event){
     	},
 		dataType : "json",
 		success : function(result) {
-
+			console.log(result);
 			let v_startTime = '';
 			let v_endTime = '';
 			
@@ -1261,11 +1269,13 @@ $('#operCompleteTbody').on('click', 'tr', function(event){
 				$('#oper-detail-elapseTime').val(convertTime(elapseTime));
 			}
 			
+			let opNm = `\${result.opKrNm}(\${result.opEnNm})`;
+			
 			$('#oper-detail-paName').data("opNo", v_opNo);
 			$('#oper-detail-paName').val(result.paName);
 			$('#oper-detail-paReg').val(result.paReg);
-			$('#oper-detail-icdName').val(result.diagHistory.icdName);
-			$('#oper-detail-empNm').val(result.operationJoinList[0].empNm);
+			$('#oper-detail-operNm').val(opNm).attr("style","color:black;");
+			$('#oper-detail-empNm').val(result.operationJoinList[0].empNm).attr("style","color:black;");
 			$('#oper-detail-startTime').val(v_startTime);
 			$('#oper-detail-endTime').val(v_endTime);
 			$('#oper-detail-operationRecord').val(result.opRecord);
@@ -1388,7 +1398,6 @@ let operCompleteList = function(){
 			
 			$.each(result, function(i, v){
 				let operCompleteDate = convertDate(v.opEndTime);
-				console.log(v.opEndTime)
 				trTag = $('<tr>').append(
 									$('<td>').html(v.opNo)
 									, $('<td>').html(v.paName)
@@ -1750,7 +1759,7 @@ $('#cex-input-btn').on('click', function(){
 			dataType : "json",
 			success : function(result) {
 				swal("등록성공","검사등록이 완료되었습니다","success");
-				ㅣㅣㅣㅣ
+
 				// 입력란 초기화
 				cexNo.value = '';
 				cexNe.value = '';
@@ -1903,7 +1912,6 @@ function cexCompleteList(){
 			let trTags = [];
 			let trTag = '';
 			$.each(result, function(i,v){
-				console.log(v)
 				let diagList = v.receptionList[0].trmChart.diagHistoryVOList[0];
  				trTag = $('<tr>').append(
 							$('<td>').html(diagList.cex.cexNo)
@@ -1957,9 +1965,7 @@ $("#Search").on("click", function(){
 			}else{
 				let trTags=[];
 				let trTag = '';
-				console.log(result);
 				$.each(result[0].receptionList,function(i,v){
-					console.log(v)
 					trTag = $('<tr>').append(
 								$('<td>').html(v.trmChart.diagHistoryVOList[0].cex.cexNo)
 								, $('<td>').html(v.trmChart.diagHistoryVOList[0].trmCd)
@@ -1994,6 +2000,9 @@ $("#SearchOperation").on("click", function(){
 			searchOption:searchOption,
 			searchWord:searchWord
 	}
+	
+	console.log(searchOption)
+	console.log(searchWord)
 
 	$.ajax({
 		url : "operHistorySearch",
