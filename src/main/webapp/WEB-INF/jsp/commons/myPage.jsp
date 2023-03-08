@@ -5,7 +5,7 @@
 
 <style>
 body {
-/*      background: #4E73DF; */
+    background: #f2f6ff; 
 }
 .content{
     margin-top: 80px;
@@ -21,6 +21,9 @@ body {
     --bs-btn-hover-border-color: #c7750a;
     --bs-btn-active-bg: #c7750a;
     --bs-btn-active-border-color: #c7750a;
+}
+.card-body{
+	box-shadow: 0px 11px 35px 2px rgb(0 0 0 / 14%);
 }
 </style>
 

@@ -9,12 +9,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import kr.or.ddit.commons.dao.MemberDAO;
 import kr.or.ddit.commons.vo.EmployeeVO;
+import kr.or.ddit.commons.vo.MemberVOWrapper;
 import kr.or.ddit.enumpkg.ServiceResult;
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,11 +57,21 @@ public class MemberServiceImpl implements MemberService{
 
 	@Override
 	public ServiceResult modifyMember(EmployeeVO member) {
+		
+		SecurityContext sc = SecurityContextHolder.getContext();
+		
+//		log.info("member:{}", member);
+//		log.info("password: " + member.getEmpPw());
 		ServiceResult result = null;
-		Authentication inputData = new UsernamePasswordAuthenticationToken(member.getEmpNo(), member.getEmpPw());
+		// 지금은 이걸 할 필요가 없음
+		//Authentication inputData = new UsernamePasswordAuthenticationToken(member.getEmpNo(), member.getEmpPw());
 		try {
-			authenticationManager.authenticate(inputData);
+			//authenticationManager.authenticate(inputData);
 			int rowcnt = memberDAO.updateMember(member);
+			EmployeeVO realMember = ((MemberVOWrapper)sc.getAuthentication().getPrincipal()).getRealMember();
+			realMember.setEmpAdd2(member.getEmpAdd2());
+			
+			//sc.setAuthentication(inputData);
 			result = rowcnt > 0 ? ServiceResult.OK : ServiceResult.FAIL;
 		}catch (UsernameNotFoundException e) {
 			result = ServiceResult.NOTEXIST;

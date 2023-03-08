@@ -10,7 +10,7 @@ import lombok.ToString;
 @EqualsAndHashCode(of="empNo")
 @Data
 @NoArgsConstructor
-@ToString(exclude= {"empPw", "empReg1"})
+@ToString(exclude= { "empReg1"})
 public class EmployeeVO {
 	private Integer empNo;
 	private String empNm;

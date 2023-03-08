@@ -163,6 +163,7 @@
             and e.trm_cd = f.trm_cd
 		where e.OPER_TF = 'Y'
         and f.hspt_no is null
+        and b.rcp_date = to_date(sysdate,'YYYY-MM-DD')
 	</select>
 	
 	<insert id="insertWardRegist" parameterType="WardRegistVO">
@@ -203,7 +204,7 @@
 	
 	
 	<select id="selectOutHsptList" resultType="OutHospitalizationVO">
-		select A.PA_NAME, B.RCP_NO, C.TRM_CD
+		select A.PA_NAME, B.RCP_NO, C.TRM_CD, A.PA_REG
 				, to_char(D.HSPT_IN_DT,'YYYY-MM-DD') as HSPT_IN_DT, to_char(D.HSPT_OUT_DT,'YYYY-MM-DD') as HSPT_OUT_DT, D.HSPT_NO
 				, D.BED_NO, D.WR_RNO,D.DISEASE_CD
 		FROM PATIENT A
