@@ -710,6 +710,7 @@ document.addEventListener('DOMContentLoaded', function calendarLoad() {
 		    							success : function(result) {
 		    								if(result==1){
 		    									swal("입력성공", "수술예약이 성공되었습니다.", "success");
+		    									operationList();
 		    									operReservList();
 		    									calendarLoad();
 		    								}

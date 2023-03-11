@@ -724,7 +724,7 @@
 		           xhr.setRequestHeader(header, token);
 		    },
 			success : function(resp) {
-				//console.log(resp);
+				console.log(resp);
 
 				swal({title:resp, icon:"success"});
 			},

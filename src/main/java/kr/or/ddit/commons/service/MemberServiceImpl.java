@@ -56,15 +56,16 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public ServiceResult modifyMember(EmployeeVO member) {
 		ServiceResult result = null;
-		Authentication inputData = new UsernamePasswordAuthenticationToken(member.getEmpNo(), member.getEmpPw());
+		//Authentication inputData = new UsernamePasswordAuthenticationToken(member.getEmpNo(), member.getEmpPw());
 		try {
-			authenticationManager.authenticate(inputData);
+			//authenticationManager.authenticate(inputData);
 			int rowcnt = memberDAO.updateMember(member);
 			changeAuthentication(member);
 			result = rowcnt > 0 ? ServiceResult.OK : ServiceResult.FAIL;
 		}catch (UsernameNotFoundException e) {
 			result = ServiceResult.NOTEXIST;
 		}catch (AuthenticationException e) {
+			log.info("{}", e.getMessage());
 			result = ServiceResult.INVALIDPASSWORD;
 		}
 		return result;
@@ -73,7 +74,7 @@ public class MemberServiceImpl implements MemberService{
 	// 새 인증객체를 만들어줌
 	private void changeAuthentication(EmployeeVO member) {
 		// 아이디와 비번을 담은 데이터 생성
-		Authentication inputData = new UsernamePasswordAuthenticationToken(member.getEmpNo(), member.getEmpPw());
+		Authentication inputData = new UsernamePasswordAuthenticationToken(member.getEmpNo(), member.getAuthPass()); // 이 정도는 실험을 통해 확인을 해 줬어야 하징!
 		// 데이터로 인증 후 인증 객체 생성 (userdetail principal -> membervowrapper)
 		Authentication newAuthentication = authenticationManager.authenticate(inputData);
 		// 현재 security session 정보 변경
