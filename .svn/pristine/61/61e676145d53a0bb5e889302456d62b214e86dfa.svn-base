@@ -267,7 +267,7 @@ text-decoration-line: none;
 		//메인페이지의 메인이미지 변경
 		$("#div11").mouseover(function() {
 			  $("#hero").css("background-image", "url('${pageContext.request.contextPath}/resources/images/hero-bg.jpg')");
-			  console.log("di+v11");
+			  console.log("div11");
 		});
 		$("#div12").mouseover(function() {
 			  $("#hero").css("background-image", "url('${pageContext.request.contextPath}/resources/images/div12.jpg')");
