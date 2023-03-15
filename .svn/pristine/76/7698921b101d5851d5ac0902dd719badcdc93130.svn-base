@@ -98,7 +98,8 @@
     							waitst_cd,
     							div_cd
 					) VALUES (	
-            			SEQ_WAITING_HISTORY.Nextval
+            			(SELECT NVL(MAX(WAIT_NO),0)+1 
+             			 FROM WAITING_HISTORY)
                 		,#{rcpNo}
                 		,SYSDATE
 						,(SELECT NVL(MAX(WAIT_NUM),0)+1 FROM WAITING_HISTORY)

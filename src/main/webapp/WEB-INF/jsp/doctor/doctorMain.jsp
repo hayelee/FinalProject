@@ -580,13 +580,13 @@
 	// 그룹오더 관리 버튼
 	let $btnManage = $("#btn_manage").on('click',function(){
 		// url, name, setting
-		window.open("${pageContext.request.contextPath}/group/grouporder","go","top=100em,left=100em,width=1460,height=750");
+		window.open("${pageContext.request.contextPath}/group/grouporder","go","top=100em,left=200em,width=1460,height=750");
 	});
 	
 	var trmCd = -1;
 	// 촬영 상세 보기
 	let $btnFilm = $("#btn_film").on('click',function(){
-		let filmWindow = window.open("${pageContext.request.contextPath}/doctor/filmDetail","film","top=100em,left=100em,width=1390,height=850");
+		let filmWindow = window.open("${pageContext.request.contextPath}/doctor/filmDetail","film","top=100em,left=200em,width=1390,height=850");
 	});
   
   /* tab 메뉴 */

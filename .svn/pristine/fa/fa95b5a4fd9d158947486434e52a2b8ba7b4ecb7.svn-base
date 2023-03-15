@@ -10,8 +10,6 @@
 <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
 <!-- 주소 API -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
-
 <title>원무과</title>
 <style type="text/css">
 #patient {
@@ -124,7 +122,6 @@ select>input {
     left: 83.5%;
     top: 24%;
 }
-i {box-sizing: border-box ; padding : 5px; font-size : 1rem; float:right;}
 
 /* .mb-3 { */
 /*     margin-bottom: 5px; */
@@ -176,7 +173,7 @@ i {box-sizing: border-box ; padding : 5px; font-size : 1rem; float:right;}
 
 	<div class="grid-stack-item" gs-w="3" gs-h="2">
 		<div class="grid-stack-item-content" style="padding-bottom: 0;">
-			<h4 class="h4-title1">접수 <i class="bi bi-box-arrow-down" id="miri"></i></h4>
+			<h4 class="h4-title2">접수</h4>
 			<!-- <p class="pTag">리스트의 환자를 클릭하고, 진료실을 지정하여 등록버튼을 눌러줍니다.</p> -->
 			<hr>
 			<div class="tab patient-rcp">
@@ -618,7 +615,7 @@ i {box-sizing: border-box ; padding : 5px; font-size : 1rem; float:right;}
 
 	<div class="grid-stack-item" gs-w="4" gs-h="2">
 		<div class="grid-stack-item-content">
-			<h4 class="h4-title1">SMS</h4>
+			<h4 class="h4-title2">SMS</h4>
 			<hr>
 			<div class="tab patient-sms">
 				<ul class="tabnav">
@@ -2773,13 +2770,6 @@ $("#smsReceiverBtn").on("click", function(){
    
        return false;
    });
-	   
-	$("#miri").on("click",function(){
-		$("#paName").val("위대현");
-		$("#paReg").val("941028");
-		$("#paHp").val("010-1298-3476");
-		$("#paAdd2").val("305호");
-	});
 	
 
 
